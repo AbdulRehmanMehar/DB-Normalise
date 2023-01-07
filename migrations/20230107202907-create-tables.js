@@ -1,5 +1,4 @@
-const async = require('async')
-  , fs = require('fs');
+const fs = require('fs');
 
 module.exports = {
   async up(queryInterface, Sequelize) {
