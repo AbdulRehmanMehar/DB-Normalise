@@ -13,6 +13,7 @@
   "devDependencies": {
     "dotenv": "^16.0.3",
     "nodemon": "^2.0.20",
+    "sequelize-automate": "^1.2.2",
     "sequelize-cli": "^6.5.2"
   },
   "dependencies": {
