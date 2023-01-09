@@ -43,7 +43,8 @@ module.exports = sequelize => {
       unique: false,
       type: "BTREE",
       fields: ["cuisineId"]
-    }]
+    }],
+    timestamps: false
   };
   const MealItemsModel = sequelize.define("meal_items_model", attributes, options);
   return MealItemsModel;

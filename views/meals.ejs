@@ -1,0 +1,40 @@
+<%- include('header') -%>
+
+
+<h2>Create a Meal</h2>
+<form action="/meals" method="post">
+
+  <label>Title: </label><input type="text" name="title"><br>
+  <label>Price: </label><input type="text" name="price"><br>
+  <label>Description: </label><textarea name="description" id="" cols="30" rows="10"></textarea><br>
+
+
+    <label>Cuisines: </label><select name="cuisines" id="" multiple="true">
+      <% cuisines.map(cuisine => { %>
+        <option value="<%= cuisine.id %>"><%= cuisine.name %></option>
+      <% }); %>
+    </select><br>
+
+    <label>Category: </label><select name="categoryId" id="">
+      <% categories.map(cuisine => { %>
+        <option value="<%= cuisine.id %>"><%= cuisine.name %></option>
+      <% }); %>
+    </select><br>
+
+    <label>Status: </label><select name="statusId" id="">
+      <% categories.map(cuisine => { %>
+        <option value="<%= cuisine.id %>"><%= cuisine.name %></option>
+      <% }); %>
+    </select><br>
+
+  <button type="submit">Submit</button>
+
+</form>
+
+<% if (meals) { %>
+  <h2>List of Meals</h2>
+  <pre><%= JSON.stringify(meals, null, 4) %></pre>
+
+<% } %>
+
+<%- include('footer') -%>

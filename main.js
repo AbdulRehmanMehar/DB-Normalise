@@ -2,7 +2,13 @@ const http = require('http');
 const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
-const { statuses_model: Statuses, cuisines_model: Cuisines } = require('./models');
+const { 
+  meals_model: Meals, 
+  statuses_model: Statuses, 
+  cuisines_model: Cuisines, 
+  meal_items_model: MealCuisines,
+  categories_model: Category,
+} = require('./models');
 
 const app = express();
 
@@ -19,19 +25,76 @@ Statuses.belongsTo(Cuisines, {
   otherKey: 'id'
 });
 
+Meals.belongsToMany(Cuisines, {
+  through: MealCuisines,
+  foreignKey: 'mealId',
+  otherKey: 'cuisineId'
+});
+
+Cuisines.belongsToMany(Meals, {
+  through: MealCuisines,
+  foreignKey: 'cuisineId',
+  otherKey: 'mealId'
+});
+
+app.set('view engine', 'ejs');
+
 app.get('/', (req, res) => {
-  res.send('up!');
+  res.redirect('/meals')
+});
+
+app.get('/meals', async (req, res) => {
+  const meals = await Meals.findAll({
+    include: [Cuisines]
+  });
+
+  const cuisines = await Cuisines.findAll();
+  const categories = await Category.findAll();
+  const statuses = await Statuses.findAll();
+  res.render('meals', { meals, cuisines, statuses, categories });
+});
+
+app.post('/meals', async (req, res) => {
+  
+  const { title, price,  description, cuisines, statusId, categoryId } = req.body;
+
+  console.log(title, price, description, cuisines);
+
+  const meal = await Meals.create({
+    title,
+    price,
+    description,
+    categoryId,
+    statusId,
+  });
+
+  meal.setmeal_items_model(cuisines);
+
+
+
+
+  res.json(meal)
 });
 
 app.get('/statuses', async (req, res) => {
   const statuses = await Statuses.findAll();
-  res.json(statuses)
+  res.json(statuses);
 });
 
-app.post('/statuses/create', async (req, res) => {
+app.get('/statuses/create', async (req, res) => {
   const { name } = req.body;
   const statuses = await Statuses.create({
     name: name || 'Cuisine Status',
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  });
+  res.json(statuses)
+});
+
+app.get('/categories/create', async (req, res) => {
+  const { name } = req.body;
+  const statuses = await Category.create({
+    name: name || 'Cuisine Category',
     createdAt: Date.now(),
     updatedAt: Date.now()
   });
@@ -47,7 +110,7 @@ app.get('/cuisine', async (req, res) => {
   res.json(cuisines)
 });
 
-app.post('/cuisine/create', async (req, res) => {
+app.get('/cuisine/create', async (req, res) => {
   const { name, icon, statusId } = req.body;
   const cuisine = await Cuisines.create({
     name: name || 'Cuisine',

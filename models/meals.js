@@ -39,32 +39,23 @@ module.exports = sequelize => {
       comment: null,
       field: "description"
     },
-    deleted_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "deleted_at"
+      field: "createdAt"
     },
-    created_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "created_at"
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "updated_at"
+      field: "updatedAt"
     },
     statusId: {
       type: DataTypes.INTEGER,
@@ -92,19 +83,6 @@ module.exports = sequelize => {
         model: "categories_model"
       }
     },
-    cuisineId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "cuisineId",
-      references: {
-        key: "id",
-        model: "cuisines_model"
-      }
-    }
   };
   const options = {
     tableName: "meals",
@@ -124,7 +102,8 @@ module.exports = sequelize => {
       unique: false,
       type: "BTREE",
       fields: ["cuisineId"]
-    }]
+    }],
+    // timestamps: false
   };
   const MealsModel = sequelize.define("meals_model", attributes, options);
   return MealsModel;
